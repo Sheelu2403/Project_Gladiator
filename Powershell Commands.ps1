@@ -36,3 +36,8 @@ $database = New-AzSqlDatabase  -ResourceGroupName $resourceGroupName `
     -DatabaseName $databaseName `
     -RequestedServiceObjectiveName "S0" `
     -SampleName "AdventureWorksLT"
+# Create Azure Data Factory Instance
+$resourceGroupName = "Batch07";
+$ResGrp = New-AzResourceGroup $resourceGroupName -location 'East US'
+$dataFactoryName = "Batch07ADFPractice";
+$DataFactory = Set-AzDataFactoryV2 -ResourceGroupName $ResGrp.ResourceGroupName  -Location 'East US'
