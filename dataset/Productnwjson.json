@@ -1,0 +1,19 @@
+{
+	"name": "Productnwjson",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LinkStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "productnw.json",
+				"container": "sampledb"
+			}
+		},
+		"schema": {}
+	}
+}
