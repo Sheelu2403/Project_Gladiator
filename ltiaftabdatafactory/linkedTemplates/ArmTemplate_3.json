@@ -1,0 +1,1164 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "ltiaftabdatafactory"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/datasetDATABASEOUT')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "linkaftabdatabase",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "CSVTODB"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "SalesLT",
+					"table": "Customer"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/datasetINDatabase')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "linkaftabdatabase",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "CopyDbToDb"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/datasetINfilelocation')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "linkaftabstorageaccountnew",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "merge"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": "location",
+						"container": "data"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"Arrival_Time": {
+							"type": "integer"
+						},
+						"Creation_Time": {
+							"type": "integer"
+						},
+						"Device": {
+							"type": "string"
+						},
+						"Index": {
+							"type": "integer"
+						},
+						"Model": {
+							"type": "string"
+						},
+						"User": {
+							"type": "string"
+						},
+						"geolocation": {
+							"type": "object",
+							"properties": {
+								"city": {
+									"type": "string"
+								},
+								"country": {
+									"type": "string"
+								}
+							}
+						},
+						"gt": {
+							"type": "string"
+						},
+						"x": {
+							"type": "number"
+						},
+						"y": {
+							"type": "number"
+						},
+						"z": {
+							"type": "number"
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/datasetINstoreloan')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "linkltiaftabstore",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "loanstoretodb"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "LoanData_Raw (2).csv",
+						"folderPath": "loan",
+						"container": "data"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Id",
+						"type": "String"
+					},
+					{
+						"name": "Loan_ID",
+						"type": "String"
+					},
+					{
+						"name": "Gender",
+						"type": "String"
+					},
+					{
+						"name": "Marital",
+						"type": "String"
+					},
+					{
+						"name": "Dependents",
+						"type": "String"
+					},
+					{
+						"name": "Education",
+						"type": "String"
+					},
+					{
+						"name": "SelfEmplo",
+						"type": "String"
+					},
+					{
+						"name": "ApplIncome",
+						"type": "String"
+					},
+					{
+						"name": "CoApplIncome",
+						"type": "String"
+					},
+					{
+						"name": "Loan Amt",
+						"type": "String"
+					},
+					{
+						"name": "Term",
+						"type": "String"
+					},
+					{
+						"name": "CreditHistory",
+						"type": "String"
+					},
+					{
+						"name": "PropArea",
+						"type": "String"
+					},
+					{
+						"name": "LoanStatus",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/datasetOUTT')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "linkaftabstorageaccountnew",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "DataBasicFlow"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "loanfemale.json",
+						"folderPath": "loan/female",
+						"container": "data"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/datasetOUTfilelocation')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "linkaftabstorageaccountnew",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "merge"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@concat('Merged', pipeline().RunId, '.csv')",
+							"type": "Expression"
+						},
+						"folderPath": "outputs",
+						"container": "data"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/datasetOUTsqlLoan')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "linkltiaftabdb",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "loanstoretodb"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "salesLT",
+					"table": "Loandata"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/datasetloandata_raw')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "linkltiaftabstore",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "loanstoretostore"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "LoanData_Raw (2).csv",
+						"folderPath": "loan",
+						"container": "data"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Id",
+						"type": "String"
+					},
+					{
+						"name": "Loan_ID",
+						"type": "String"
+					},
+					{
+						"name": "Gender",
+						"type": "String"
+					},
+					{
+						"name": "Marital",
+						"type": "String"
+					},
+					{
+						"name": "Dependents",
+						"type": "String"
+					},
+					{
+						"name": "Education",
+						"type": "String"
+					},
+					{
+						"name": "SelfEmplo",
+						"type": "String"
+					},
+					{
+						"name": "ApplIncome",
+						"type": "String"
+					},
+					{
+						"name": "CoApplIncome",
+						"type": "String"
+					},
+					{
+						"name": "Loan Amt",
+						"type": "String"
+					},
+					{
+						"name": "Term",
+						"type": "String"
+					},
+					{
+						"name": "CreditHistory",
+						"type": "String"
+					},
+					{
+						"name": "PropArea",
+						"type": "String"
+					},
+					{
+						"name": "LoanStatus",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/datasetltiaftabsqldbcustomer')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "linkltiaftabdb",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "customerdbtostore"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "AddressID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "AddressLine1",
+						"type": "nvarchar"
+					},
+					{
+						"name": "AddressLine2",
+						"type": "nvarchar"
+					},
+					{
+						"name": "City",
+						"type": "nvarchar"
+					},
+					{
+						"name": "StateProvince",
+						"type": "nvarchar"
+					},
+					{
+						"name": "CountryRegion",
+						"type": "nvarchar"
+					},
+					{
+						"name": "PostalCode",
+						"type": "nvarchar"
+					},
+					{
+						"name": "rowguid",
+						"type": "uniqueidentifier"
+					},
+					{
+						"name": "ModifiedDate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": "SalesLT",
+					"table": "Address"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/datasetltioutaftabltiaftabstore')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "linkltiaftabstore",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "customerdbtostore"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "customer.csv",
+						"folderPath": "customer",
+						"container": "data"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/datasetoutloandata_rawjson')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "linkltiaftabstore",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "loanstoretostore"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "loandatajson",
+						"folderPath": "outputs",
+						"container": "data"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/datasetproductINsqlDb')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "linkltiaftabdb",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "productdbtoSTOREtoADL"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "SalesLT",
+					"table": "Address"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/datasetproductINstoreparquet')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "linkltiaftabstore",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "productdbtoSTOREtoADL"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "products.parquet",
+						"folderPath": "outputs",
+						"container": "data"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/datasetproductOUTadlCsv')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "linkltiaftabadl",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "productdbtoSTOREtoADL"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "products.csv",
+						"folderPath": "products",
+						"fileSystem": "outputadl"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/datasetproductOUTstoreparquet')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "linkltiaftabstore",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "productdbtoSTOREtoADL"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "products.parquet",
+						"folderPath": "outputs",
+						"container": "data"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/parquetoutput')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "linkltiaftabstore",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "convertingcsvtoparquet"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "csvtoparquet.parquet",
+						"container": "data"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/CopyPipeline_r4y')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy_r4y",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "data/loan/LoanData_Raw (2).csv"
+							},
+							{
+								"name": "Destination",
+								"value": "data/outputs/"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "BinarySource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true
+								},
+								"formatSettings": {
+									"type": "BinaryReadSettings"
+								}
+							},
+							"sink": {
+								"type": "BinarySink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"validateDataConsistency": false
+						},
+						"inputs": [
+							{
+								"referenceName": "SourceDataset_r4y",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DestinationDataset_r4y",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-09-15T07:03:07Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PipelineCopyloanstoretostore')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ActivityCopyCsvtoJson",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": false,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "JsonSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "JsonWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"dataIntegrationUnits": 2,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Id",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['Id']"
+										}
+									},
+									{
+										"source": {
+											"name": "Loan_ID",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['Loan_ID']"
+										}
+									},
+									{
+										"source": {
+											"name": "Gender",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['Gender']"
+										}
+									},
+									{
+										"source": {
+											"name": "Marital",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['Marital']"
+										}
+									},
+									{
+										"source": {
+											"name": "Dependents",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['Dependents']"
+										}
+									},
+									{
+										"source": {
+											"name": "Education",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['Education']"
+										}
+									},
+									{
+										"source": {
+											"name": "SelfEmplo",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['SelfEmplo']"
+										}
+									},
+									{
+										"source": {
+											"name": "ApplIncome",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['ApplIncome']"
+										}
+									},
+									{
+										"source": {
+											"name": "CoApplIncome",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['CoApplIncome']"
+										}
+									},
+									{
+										"source": {
+											"name": "Loan Amt",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['Loan Amt']"
+										}
+									},
+									{
+										"source": {
+											"name": "PropArea",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['PropArea']"
+										}
+									},
+									{
+										"source": {
+											"name": "LoanStatus",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['LoanStatus']"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "datasetloandata_raw",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "datasetoutloandata_rawjson",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-09-15T07:21:43Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/datasetloandata_raw')]",
+				"[concat(variables('factoryId'), '/datasets/datasetoutloandata_rawjson')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PipelineCopystoretostore')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Activitycopystoretostore",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": false,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "JsonSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "JsonWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"dataIntegrationUnits": 2,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Id",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['Id']"
+										}
+									},
+									{
+										"source": {
+											"name": "Loan_ID",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['Loan_ID']"
+										}
+									},
+									{
+										"source": {
+											"name": "Gender",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['Gender']"
+										}
+									},
+									{
+										"source": {
+											"name": "Marital",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['Marital']"
+										}
+									},
+									{
+										"source": {
+											"name": "Dependents",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['Dependents']"
+										}
+									},
+									{
+										"source": {
+											"name": "Education",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['Education']"
+										}
+									},
+									{
+										"source": {
+											"name": "SelfEmplo",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['SelfEmplo']"
+										}
+									},
+									{
+										"source": {
+											"name": "ApplIncome",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['ApplIncome']"
+										}
+									},
+									{
+										"source": {
+											"name": "CoApplIncome",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['CoApplIncome']"
+										}
+									},
+									{
+										"source": {
+											"name": "Loan Amt",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['Loan Amt']"
+										}
+									},
+									{
+										"source": {
+											"name": "Term",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['Term']"
+										}
+									},
+									{
+										"source": {
+											"name": "CreditHistory",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['CreditHistory']"
+										}
+									},
+									{
+										"source": {
+											"name": "PropArea",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['PropArea']"
+										}
+									},
+									{
+										"source": {
+											"name": "LoanStatus",
+											"type": "String"
+										},
+										"sink": {
+											"path": "$['LoanStatus']"
+										}
+									}
+								]
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "DatasetINCsvTOJson",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DatasetOUTJson",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-09-15T17:22:37Z"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipelineCopyMy')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ActivityCopyCsvToJson",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": false,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "JsonSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "JsonWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "MyDatasetINParquetFile",
+								"type": "DatasetReference",
+								"parameters": {
+									"filename": {
+										"value": "@pipeline().parameters.filename",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "MyDatasetOUTJson",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"filename": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "MyCopyCsvToJson"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-09-18T09:53:54Z"
+			},
+			"dependsOn": []
+		}
+	]
+}

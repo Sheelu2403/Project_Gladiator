@@ -1,0 +1,66 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "ltiaftabdatafactory"
+		},
+		"AzureSqlDatabase1_connectionString": {
+			"value": ""
+		},
+		"LinkDB_connectionString": {
+			"value": ""
+		},
+		"LinkDbScdType1_connectionString": {
+			"value": ""
+		},
+		"LinkStorage_connectionString": {
+			"value": ""
+		},
+		"linkSCD2db_connectionString": {
+			"value": ""
+		},
+		"linkaftabdatabase_connectionString": {
+			"value": ""
+		},
+		"linkaftabsqldbnew_connectionString": {
+			"value": ""
+		},
+		"linkaftabstorageaccountnew_connectionString": {
+			"value": ""
+		},
+		"linkbatch07sqldb_connectionString": {
+			"value": ""
+		},
+		"linkdatasettoltiaftabstorageaccount_connectionString": {
+			"value": ""
+		},
+		"linkltiaftabadl_accountKey": {
+			"value": ""
+		},
+		"linkltiaftabdata_accountKey": {
+			"value": ""
+		},
+		"linkltiaftabdb_connectionString": {
+			"value": ""
+		},
+		"linkltiaftabstorageaccount_connectionString": {
+			"value": ""
+		},
+		"linkltiaftabstore_connectionString": {
+			"value": ""
+		},
+		"linkprojectdatabase_connectionString": {
+			"value": ""
+		},
+		"ltiaftabdb_connectionString": {
+			"value": ""
+		},
+		"linkltiaftabadl_properties_typeProperties_url": {
+			"value": "https://ltiaftabadl.dfs.core.windows.net/"
+		},
+		"linkltiaftabdata_properties_typeProperties_url": {
+			"value": "https://ltiaftabstore.dfs.core.windows.net/"
+		}
+	}
+}

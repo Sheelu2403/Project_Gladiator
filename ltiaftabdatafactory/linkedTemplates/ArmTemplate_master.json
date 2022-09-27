@@ -1,0 +1,275 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "ltiaftabdatafactory"
+		},
+		"AzureSqlDatabase1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureSqlDatabase1'"
+		},
+		"LinkDB_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LinkDB'"
+		},
+		"LinkDbScdType1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LinkDbScdType1'"
+		},
+		"LinkStorage_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LinkStorage'"
+		},
+		"linkSCD2db_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'linkSCD2db'"
+		},
+		"linkaftabdatabase_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'linkaftabdatabase'"
+		},
+		"linkaftabsqldbnew_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'linkaftabsqldbnew'"
+		},
+		"linkaftabstorageaccountnew_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'linkaftabstorageaccountnew'"
+		},
+		"linkbatch07sqldb_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'linkbatch07sqldb'"
+		},
+		"linkdatasettoltiaftabstorageaccount_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'linkdatasettoltiaftabstorageaccount'"
+		},
+		"linkltiaftabadl_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'linkltiaftabadl'"
+		},
+		"linkltiaftabdata_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'linkltiaftabdata'"
+		},
+		"linkltiaftabdb_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'linkltiaftabdb'"
+		},
+		"linkltiaftabstorageaccount_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'linkltiaftabstorageaccount'"
+		},
+		"linkltiaftabstore_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'linkltiaftabstore'"
+		},
+		"linkprojectdatabase_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'linkprojectdatabase'"
+		},
+		"ltiaftabdb_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'ltiaftabdb'"
+		},
+		"linkltiaftabadl_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://ltiaftabadl.dfs.core.windows.net/"
+		},
+		"linkltiaftabdata_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://ltiaftabstore.dfs.core.windows.net/"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "ltiaftabdatafactory_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"AzureSqlDatabase1_connectionString": {
+						"value": "[parameters('AzureSqlDatabase1_connectionString')]"
+					},
+					"LinkDB_connectionString": {
+						"value": "[parameters('LinkDB_connectionString')]"
+					},
+					"LinkDbScdType1_connectionString": {
+						"value": "[parameters('LinkDbScdType1_connectionString')]"
+					},
+					"LinkStorage_connectionString": {
+						"value": "[parameters('LinkStorage_connectionString')]"
+					},
+					"linkSCD2db_connectionString": {
+						"value": "[parameters('linkSCD2db_connectionString')]"
+					},
+					"linkaftabdatabase_connectionString": {
+						"value": "[parameters('linkaftabdatabase_connectionString')]"
+					},
+					"linkaftabsqldbnew_connectionString": {
+						"value": "[parameters('linkaftabsqldbnew_connectionString')]"
+					},
+					"linkaftabstorageaccountnew_connectionString": {
+						"value": "[parameters('linkaftabstorageaccountnew_connectionString')]"
+					},
+					"linkbatch07sqldb_connectionString": {
+						"value": "[parameters('linkbatch07sqldb_connectionString')]"
+					},
+					"linkdatasettoltiaftabstorageaccount_connectionString": {
+						"value": "[parameters('linkdatasettoltiaftabstorageaccount_connectionString')]"
+					},
+					"linkltiaftabadl_accountKey": {
+						"value": "[parameters('linkltiaftabadl_accountKey')]"
+					},
+					"linkltiaftabdata_accountKey": {
+						"value": "[parameters('linkltiaftabdata_accountKey')]"
+					},
+					"linkltiaftabdb_connectionString": {
+						"value": "[parameters('linkltiaftabdb_connectionString')]"
+					},
+					"linkltiaftabstorageaccount_connectionString": {
+						"value": "[parameters('linkltiaftabstorageaccount_connectionString')]"
+					},
+					"linkltiaftabstore_connectionString": {
+						"value": "[parameters('linkltiaftabstore_connectionString')]"
+					},
+					"linkprojectdatabase_connectionString": {
+						"value": "[parameters('linkprojectdatabase_connectionString')]"
+					},
+					"ltiaftabdb_connectionString": {
+						"value": "[parameters('ltiaftabdb_connectionString')]"
+					},
+					"linkltiaftabadl_properties_typeProperties_url": {
+						"value": "[parameters('linkltiaftabadl_properties_typeProperties_url')]"
+					},
+					"linkltiaftabdata_properties_typeProperties_url": {
+						"value": "[parameters('linkltiaftabdata_properties_typeProperties_url')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "ltiaftabdatafactory_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'ltiaftabdatafactory_ArmTemplate_0')]"
+			]
+		},
+		{
+			"name": "ltiaftabdatafactory_ArmTemplate_2",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_2.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'ltiaftabdatafactory_ArmTemplate_1')]"
+			]
+		},
+		{
+			"name": "ltiaftabdatafactory_ArmTemplate_3",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_3.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'ltiaftabdatafactory_ArmTemplate_2')]"
+			]
+		},
+		{
+			"name": "ltiaftabdatafactory_ArmTemplate_4",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_4.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'ltiaftabdatafactory_ArmTemplate_3')]"
+			]
+		},
+		{
+			"name": "ltiaftabdatafactory_ArmTemplate_5",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_5.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'ltiaftabdatafactory_ArmTemplate_4')]"
+			]
+		}
+	]
+}
