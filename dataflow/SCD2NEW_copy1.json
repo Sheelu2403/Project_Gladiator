@@ -1,0 +1,284 @@
+{
+	"name": "SCD2NEW_copy1",
+	"properties": {
+		"folder": {
+			"name": "ProjectGladiator"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Product1IN",
+						"type": "DatasetReference"
+					},
+					"name": "Product1"
+				},
+				{
+					"dataset": {
+						"referenceName": "ProductnwOUT",
+						"type": "DatasetReference"
+					},
+					"name": "Productnw"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ProductnwOUT",
+						"type": "DatasetReference"
+					},
+					"name": "sinkUpdate"
+				},
+				{
+					"dataset": {
+						"referenceName": "ProductnwOUT",
+						"type": "DatasetReference"
+					},
+					"name": "sinkChanged"
+				}
+			],
+			"transformations": [
+				{
+					"name": "pidcheck"
+				},
+				{
+					"name": "Split"
+				},
+				{
+					"name": "selectcol"
+				},
+				{
+					"name": "costcheck"
+				},
+				{
+					"name": "filterchangedcost"
+				},
+				{
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "changename"
+				},
+				{
+					"name": "AlterRow1"
+				},
+				{
+					"name": "selectnw"
+				},
+				{
+					"name": "selectproduct1"
+				},
+				{
+					"name": "sDateActice"
+				},
+				{
+					"name": "union1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          ProductID as integer,",
+				"          Name as string,",
+				"          ProductNumber as string,",
+				"          Color as string,",
+				"          StandardCost as decimal(19,4),",
+				"          ListPrice as decimal(19,4),",
+				"          Size as string,",
+				"          Weight as decimal(8,2),",
+				"          ProductCategoryID as integer,",
+				"          ProductModelID as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> Product1",
+				"source(output(",
+				"          surrKey as integer,",
+				"          ProductID as integer,",
+				"          Name as string,",
+				"          ProductNumber as string,",
+				"          Color as string,",
+				"          StandardCost as decimal(19,4),",
+				"          ListPrice as decimal(19,4),",
+				"          Size as string,",
+				"          Weight as decimal(18,0),",
+				"          ProductCategory as integer,",
+				"          ProductModelID as integer,",
+				"          StartDate as date,",
+				"          EndDate as date,",
+				"          iscurrent as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> Productnw",
+				"Product1, changename lookup(ProductID == {nw-ProductID},",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> pidcheck",
+				"pidcheck split(!isNull({nw-ProductID}),",
+				"     isNull({nw-ProductID}),",
+				"     disjoint: true) ~> Split@(old, new, All)",
+				"Split@old select(mapColumn(",
+				"          ProductID,",
+				"          Name,",
+				"          ProductNumber,",
+				"          Color,",
+				"          StandardCost,",
+				"          ListPrice,",
+				"          Size,",
+				"          Weight,",
+				"          ProductCategoryID,",
+				"          ProductModelID",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectcol",
+				"selectcol, changename lookup(ProductID == {nw-ProductID}",
+				"     && StandardCost != {nw-StandardCost},",
+				"     multiple: true,",
+				"     broadcast: 'right')~> costcheck",
+				"costcheck filter(!isNull({nw-ProductID})) ~> filterchangedcost",
+				"selectnw derive(iscurrent = 0,",
+				"          EndDate = currentDate()) ~> derivedColumn2",
+				"Productnw select(mapColumn(",
+				"          {nw-surrKey} = surrKey,",
+				"          {nw-ProductID} = ProductID,",
+				"          {nw-Name} = Name,",
+				"          {nw-ProductNumber} = ProductNumber,",
+				"          {nw-Color} = Color,",
+				"          {nw-StandardCost} = StandardCost,",
+				"          {nw-ListPrice} = ListPrice,",
+				"          {nw-Size} = Size,",
+				"          {nw-Weight} = Weight,",
+				"          {nw-ProductCategory} = ProductCategory,",
+				"          {nw-ProductModelID} = ProductModelID,",
+				"          {nw-StartDate} = StartDate,",
+				"          {nw-EndDate} = EndDate,",
+				"          {nw-iscurrent} = iscurrent",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> changename",
+				"derivedColumn2 alterRow(updateIf(1==1)) ~> AlterRow1",
+				"filterchangedcost select(mapColumn(",
+				"          {nw-surrKey},",
+				"          {nw-ProductID},",
+				"          {nw-Name},",
+				"          {nw-ProductNumber},",
+				"          {nw-Color},",
+				"          {nw-StandardCost},",
+				"          {nw-ListPrice},",
+				"          {nw-Size},",
+				"          {nw-Weight},",
+				"          {nw-ProductCategory},",
+				"          {nw-ProductModelID},",
+				"          {nw-StartDate},",
+				"          {nw-EndDate},",
+				"          {nw-iscurrent}",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectnw",
+				"union1 select(mapColumn(",
+				"          ProductID,",
+				"          Name,",
+				"          ProductNumber,",
+				"          Color,",
+				"          StandardCost,",
+				"          ListPrice,",
+				"          Size,",
+				"          Weight,",
+				"          ProductCategoryID,",
+				"          ProductModelID",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectproduct1",
+				"selectproduct1 derive(isActive = 1,",
+				"          StartDate = currentDate()) ~> sDateActice",
+				"filterchangedcost, Split@new union(byName: true)~> union1",
+				"AlterRow1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          surrKey as integer,",
+				"          ProductID as integer,",
+				"          Name as string,",
+				"          ProductNumber as string,",
+				"          Color as string,",
+				"          StandardCost as decimal(19,4),",
+				"          ListPrice as decimal(19,4),",
+				"          Size as string,",
+				"          Weight as decimal(18,0),",
+				"          ProductCategory as integer,",
+				"          ProductModelID as integer,",
+				"          StartDate as date,",
+				"          EndDate as date,",
+				"          iscurrent as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:false,",
+				"     updateable:true,",
+				"     upsertable:false,",
+				"     keys:['surrKey'],",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          surrKey = {nw-surrKey},",
+				"          ProductID = {nw-ProductID},",
+				"          Name = {nw-Name},",
+				"          ProductNumber = {nw-ProductNumber},",
+				"          Color = {nw-Color},",
+				"          StandardCost = {nw-StandardCost},",
+				"          ListPrice = {nw-ListPrice},",
+				"          Size = {nw-Size},",
+				"          Weight = {nw-Weight},",
+				"          ProductCategory = {nw-ProductCategory},",
+				"          ProductModelID = {nw-ProductModelID},",
+				"          StartDate = {nw-StartDate},",
+				"          EndDate,",
+				"          iscurrent",
+				"     )) ~> sinkUpdate",
+				"sDateActice sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          surrKey as integer,",
+				"          ProductID as integer,",
+				"          Name as string,",
+				"          ProductNumber as string,",
+				"          Color as string,",
+				"          StandardCost as decimal(19,4),",
+				"          ListPrice as decimal(19,4),",
+				"          Size as string,",
+				"          Weight as decimal(18,0),",
+				"          ProductCategory as integer,",
+				"          ProductModelID as integer,",
+				"          StartDate as date,",
+				"          EndDate as date,",
+				"          iscurrent as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          ProductID,",
+				"          Name,",
+				"          ProductNumber,",
+				"          Color,",
+				"          StandardCost,",
+				"          ListPrice,",
+				"          Size,",
+				"          Weight,",
+				"          ProductCategory = ProductCategoryID,",
+				"          ProductModelID,",
+				"          StartDate,",
+				"          iscurrent = isActive",
+				"     )) ~> sinkChanged"
+			]
+		}
+	}
+}
