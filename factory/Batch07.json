@@ -1,0 +1,9 @@
+{
+	"name": "Batch07",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "5253d824-8865-43f8-aada-f5eafea1d526",
+		"tenantId": "02aa9fc1-18bc-4798-a020-e01c854dd434"
+	}
+}
