@@ -2,7 +2,7 @@
 	"name": "ProductnwOUT",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "LinkDB",
+			"referenceName": "linkprojectdatabase",
 			"type": "LinkedServiceReference"
 		},
 		"folder": {
