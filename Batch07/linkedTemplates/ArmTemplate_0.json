@@ -1,0 +1,1334 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "Batch07"
+		},
+		"LinkDB_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LinkDB'"
+		},
+		"LinkStorage_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LinkStorage'"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/LinkDB')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('LinkDB_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LinkStorage')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('LinkStorage_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Product1IN')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LinkDB",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "ProjectGladiator"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "ProductID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ProductNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Color",
+						"type": "nvarchar"
+					},
+					{
+						"name": "StandardCost",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "ListPrice",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Size",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Weight",
+						"type": "decimal",
+						"precision": 8,
+						"scale": 2
+					},
+					{
+						"name": "ProductCategoryID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ProductModelID",
+						"type": "int",
+						"precision": 10
+					}
+				],
+				"typeProperties": {
+					"schema": "SalesLT",
+					"table": "Product1"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LinkDB')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ProductnwOUT')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LinkDB",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "ProjectGladiator"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "surrKey",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ProductID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Name",
+						"type": "nvarchar"
+					},
+					{
+						"name": "ProductNumber",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Color",
+						"type": "nvarchar"
+					},
+					{
+						"name": "StandardCost",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "ListPrice",
+						"type": "money",
+						"precision": 19,
+						"scale": 4
+					},
+					{
+						"name": "Size",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Weight",
+						"type": "decimal",
+						"precision": 18,
+						"scale": 0
+					},
+					{
+						"name": "ProductCategory",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ProductModelID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "StartDate",
+						"type": "date"
+					},
+					{
+						"name": "EndDate",
+						"type": "date"
+					},
+					{
+						"name": "iscurrent",
+						"type": "int",
+						"precision": 10
+					}
+				],
+				"typeProperties": {
+					"schema": "SalesLT",
+					"table": "productnw"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LinkDB')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Productnwjson')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LinkStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "productnw.json",
+						"container": "sampledb"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LinkStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SCD2NEW')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "ProjectGladiator"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "Product1IN",
+								"type": "DatasetReference"
+							},
+							"name": "Product1"
+						},
+						{
+							"dataset": {
+								"referenceName": "ProductnwOUT",
+								"type": "DatasetReference"
+							},
+							"name": "Productnw"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ProductnwOUT",
+								"type": "DatasetReference"
+							},
+							"name": "sinkUpdate"
+						},
+						{
+							"dataset": {
+								"referenceName": "ProductnwOUT",
+								"type": "DatasetReference"
+							},
+							"name": "sinkChanged"
+						}
+					],
+					"transformations": [
+						{
+							"name": "pidcheck"
+						},
+						{
+							"name": "Split"
+						},
+						{
+							"name": "select2"
+						},
+						{
+							"name": "costcheck"
+						},
+						{
+							"name": "filterchangedcost"
+						},
+						{
+							"name": "derivedColumn2"
+						},
+						{
+							"name": "changename"
+						},
+						{
+							"name": "AlterRow1"
+						},
+						{
+							"name": "selectnw"
+						},
+						{
+							"name": "selectproduct1"
+						},
+						{
+							"name": "sDateActice"
+						},
+						{
+							"name": "union1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          ProductID as integer,",
+						"          Name as string,",
+						"          ProductNumber as string,",
+						"          Color as string,",
+						"          StandardCost as decimal(19,4),",
+						"          ListPrice as decimal(19,4),",
+						"          Size as string,",
+						"          Weight as decimal(8,2),",
+						"          ProductCategoryID as integer,",
+						"          ProductModelID as integer",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> Product1",
+						"source(output(",
+						"          surrKey as integer,",
+						"          ProductID as integer,",
+						"          Name as string,",
+						"          ProductNumber as string,",
+						"          Color as string,",
+						"          StandardCost as decimal(19,4),",
+						"          ListPrice as decimal(19,4),",
+						"          Size as string,",
+						"          Weight as decimal(18,0),",
+						"          ProductCategory as integer,",
+						"          ProductModelID as integer,",
+						"          StartDate as date,",
+						"          EndDate as date,",
+						"          iscurrent as integer",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> Productnw",
+						"Product1, changename lookup(ProductID == {nw-ProductID},",
+						"     multiple: false,",
+						"     pickup: 'any',",
+						"     broadcast: 'auto')~> pidcheck",
+						"pidcheck split(!isNull({nw-ProductID}),",
+						"     isNull({nw-ProductID}),",
+						"     disjoint: true) ~> Split@(old, new, All)",
+						"Split@old select(mapColumn(",
+						"          ProductID,",
+						"          Name,",
+						"          ProductNumber,",
+						"          Color,",
+						"          StandardCost,",
+						"          ListPrice,",
+						"          Size,",
+						"          Weight,",
+						"          ProductCategoryID,",
+						"          ProductModelID",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select2",
+						"select2, changename lookup(ProductID == {nw-ProductID}",
+						"     && StandardCost != {nw-StandardCost},",
+						"     multiple: true,",
+						"     broadcast: 'right')~> costcheck",
+						"costcheck filter(!isNull({nw-ProductID})) ~> filterchangedcost",
+						"selectnw derive(iscurrent = 0,",
+						"          EndDate = currentDate()) ~> derivedColumn2",
+						"Productnw select(mapColumn(",
+						"          {nw-surrKey} = surrKey,",
+						"          {nw-ProductID} = ProductID,",
+						"          {nw-Name} = Name,",
+						"          {nw-ProductNumber} = ProductNumber,",
+						"          {nw-Color} = Color,",
+						"          {nw-StandardCost} = StandardCost,",
+						"          {nw-ListPrice} = ListPrice,",
+						"          {nw-Size} = Size,",
+						"          {nw-Weight} = Weight,",
+						"          {nw-ProductCategory} = ProductCategory,",
+						"          {nw-ProductModelID} = ProductModelID,",
+						"          {nw-StartDate} = StartDate,",
+						"          {nw-EndDate} = EndDate,",
+						"          {nw-iscurrent} = iscurrent",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> changename",
+						"derivedColumn2 alterRow(updateIf(1==1)) ~> AlterRow1",
+						"filterchangedcost select(mapColumn(",
+						"          {nw-surrKey},",
+						"          {nw-ProductID},",
+						"          {nw-Name},",
+						"          {nw-ProductNumber},",
+						"          {nw-Color},",
+						"          {nw-StandardCost},",
+						"          {nw-ListPrice},",
+						"          {nw-Size},",
+						"          {nw-Weight},",
+						"          {nw-ProductCategory},",
+						"          {nw-ProductModelID},",
+						"          {nw-StartDate},",
+						"          {nw-EndDate},",
+						"          {nw-iscurrent}",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> selectnw",
+						"union1 select(mapColumn(",
+						"          ProductID,",
+						"          Name,",
+						"          ProductNumber,",
+						"          Color,",
+						"          StandardCost,",
+						"          ListPrice,",
+						"          Size,",
+						"          Weight,",
+						"          ProductCategoryID,",
+						"          ProductModelID",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> selectproduct1",
+						"selectproduct1 derive(isActive = 1,",
+						"          StartDate = currentDate()) ~> sDateActice",
+						"filterchangedcost, Split@new union(byName: true)~> union1",
+						"AlterRow1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          surrKey as integer,",
+						"          ProductID as integer,",
+						"          Name as string,",
+						"          ProductNumber as string,",
+						"          Color as string,",
+						"          StandardCost as decimal(19,4),",
+						"          ListPrice as decimal(19,4),",
+						"          Size as string,",
+						"          Weight as decimal(18,0),",
+						"          ProductCategory as integer,",
+						"          ProductModelID as integer,",
+						"          StartDate as date,",
+						"          EndDate as date,",
+						"          iscurrent as integer",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:false,",
+						"     updateable:true,",
+						"     upsertable:false,",
+						"     keys:['surrKey'],",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          surrKey = {nw-surrKey},",
+						"          ProductID = {nw-ProductID},",
+						"          Name = {nw-Name},",
+						"          ProductNumber = {nw-ProductNumber},",
+						"          Color = {nw-Color},",
+						"          StandardCost = {nw-StandardCost},",
+						"          ListPrice = {nw-ListPrice},",
+						"          Size = {nw-Size},",
+						"          Weight = {nw-Weight},",
+						"          ProductCategory = {nw-ProductCategory},",
+						"          ProductModelID = {nw-ProductModelID},",
+						"          StartDate = {nw-StartDate},",
+						"          EndDate,",
+						"          iscurrent",
+						"     )) ~> sinkUpdate",
+						"sDateActice sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          surrKey as integer,",
+						"          ProductID as integer,",
+						"          Name as string,",
+						"          ProductNumber as string,",
+						"          Color as string,",
+						"          StandardCost as decimal(19,4),",
+						"          ListPrice as decimal(19,4),",
+						"          Size as string,",
+						"          Weight as decimal(18,0),",
+						"          ProductCategory as integer,",
+						"          ProductModelID as integer,",
+						"          StartDate as date,",
+						"          EndDate as date,",
+						"          iscurrent as integer",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          ProductID,",
+						"          Name,",
+						"          ProductNumber,",
+						"          Color,",
+						"          StandardCost,",
+						"          ListPrice,",
+						"          Size,",
+						"          Weight,",
+						"          ProductCategory = ProductCategoryID,",
+						"          ProductModelID,",
+						"          StartDate,",
+						"          iscurrent = isActive",
+						"     )) ~> sinkChanged"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Product1IN')]",
+				"[concat(variables('factoryId'), '/datasets/ProductnwOUT')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SCD2NEW_copy1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "ProjectGladiator"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "Product1IN",
+								"type": "DatasetReference"
+							},
+							"name": "Product1"
+						},
+						{
+							"dataset": {
+								"referenceName": "ProductnwOUT",
+								"type": "DatasetReference"
+							},
+							"name": "Productnw"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ProductnwOUT",
+								"type": "DatasetReference"
+							},
+							"name": "sinkUpdate"
+						},
+						{
+							"dataset": {
+								"referenceName": "ProductnwOUT",
+								"type": "DatasetReference"
+							},
+							"name": "sinkChanged"
+						}
+					],
+					"transformations": [
+						{
+							"name": "pidcheck"
+						},
+						{
+							"name": "Split"
+						},
+						{
+							"name": "selectcol"
+						},
+						{
+							"name": "costcheck"
+						},
+						{
+							"name": "filterchangedcost"
+						},
+						{
+							"name": "derivedColumn2"
+						},
+						{
+							"name": "changename"
+						},
+						{
+							"name": "AlterRow1"
+						},
+						{
+							"name": "selectnw"
+						},
+						{
+							"name": "selectproduct1"
+						},
+						{
+							"name": "sDateActice"
+						},
+						{
+							"name": "union1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          ProductID as integer,",
+						"          Name as string,",
+						"          ProductNumber as string,",
+						"          Color as string,",
+						"          StandardCost as decimal(19,4),",
+						"          ListPrice as decimal(19,4),",
+						"          Size as string,",
+						"          Weight as decimal(8,2),",
+						"          ProductCategoryID as integer,",
+						"          ProductModelID as integer",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> Product1",
+						"source(output(",
+						"          surrKey as integer,",
+						"          ProductID as integer,",
+						"          Name as string,",
+						"          ProductNumber as string,",
+						"          Color as string,",
+						"          StandardCost as decimal(19,4),",
+						"          ListPrice as decimal(19,4),",
+						"          Size as string,",
+						"          Weight as decimal(18,0),",
+						"          ProductCategory as integer,",
+						"          ProductModelID as integer,",
+						"          StartDate as date,",
+						"          EndDate as date,",
+						"          iscurrent as integer",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> Productnw",
+						"Product1, changename lookup(ProductID == {nw-ProductID},",
+						"     multiple: false,",
+						"     pickup: 'any',",
+						"     broadcast: 'auto')~> pidcheck",
+						"pidcheck split(!isNull({nw-ProductID}),",
+						"     isNull({nw-ProductID}),",
+						"     disjoint: true) ~> Split@(old, new, All)",
+						"Split@old select(mapColumn(",
+						"          ProductID,",
+						"          Name,",
+						"          ProductNumber,",
+						"          Color,",
+						"          StandardCost,",
+						"          ListPrice,",
+						"          Size,",
+						"          Weight,",
+						"          ProductCategoryID,",
+						"          ProductModelID",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> selectcol",
+						"selectcol, changename lookup(ProductID == {nw-ProductID}",
+						"     && StandardCost != {nw-StandardCost},",
+						"     multiple: true,",
+						"     broadcast: 'right')~> costcheck",
+						"costcheck filter(!isNull({nw-ProductID})) ~> filterchangedcost",
+						"selectnw derive(iscurrent = 0,",
+						"          EndDate = currentDate()) ~> derivedColumn2",
+						"Productnw select(mapColumn(",
+						"          {nw-surrKey} = surrKey,",
+						"          {nw-ProductID} = ProductID,",
+						"          {nw-Name} = Name,",
+						"          {nw-ProductNumber} = ProductNumber,",
+						"          {nw-Color} = Color,",
+						"          {nw-StandardCost} = StandardCost,",
+						"          {nw-ListPrice} = ListPrice,",
+						"          {nw-Size} = Size,",
+						"          {nw-Weight} = Weight,",
+						"          {nw-ProductCategory} = ProductCategory,",
+						"          {nw-ProductModelID} = ProductModelID,",
+						"          {nw-StartDate} = StartDate,",
+						"          {nw-EndDate} = EndDate,",
+						"          {nw-iscurrent} = iscurrent",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> changename",
+						"derivedColumn2 alterRow(updateIf(1==1)) ~> AlterRow1",
+						"filterchangedcost select(mapColumn(",
+						"          {nw-surrKey},",
+						"          {nw-ProductID},",
+						"          {nw-Name},",
+						"          {nw-ProductNumber},",
+						"          {nw-Color},",
+						"          {nw-StandardCost},",
+						"          {nw-ListPrice},",
+						"          {nw-Size},",
+						"          {nw-Weight},",
+						"          {nw-ProductCategory},",
+						"          {nw-ProductModelID},",
+						"          {nw-StartDate},",
+						"          {nw-EndDate},",
+						"          {nw-iscurrent}",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> selectnw",
+						"union1 select(mapColumn(",
+						"          ProductID,",
+						"          Name,",
+						"          ProductNumber,",
+						"          Color,",
+						"          StandardCost,",
+						"          ListPrice,",
+						"          Size,",
+						"          Weight,",
+						"          ProductCategoryID,",
+						"          ProductModelID",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> selectproduct1",
+						"selectproduct1 derive(isActive = 1,",
+						"          StartDate = currentDate()) ~> sDateActice",
+						"filterchangedcost, Split@new union(byName: true)~> union1",
+						"AlterRow1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          surrKey as integer,",
+						"          ProductID as integer,",
+						"          Name as string,",
+						"          ProductNumber as string,",
+						"          Color as string,",
+						"          StandardCost as decimal(19,4),",
+						"          ListPrice as decimal(19,4),",
+						"          Size as string,",
+						"          Weight as decimal(18,0),",
+						"          ProductCategory as integer,",
+						"          ProductModelID as integer,",
+						"          StartDate as date,",
+						"          EndDate as date,",
+						"          iscurrent as integer",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:false,",
+						"     updateable:true,",
+						"     upsertable:false,",
+						"     keys:['surrKey'],",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          surrKey = {nw-surrKey},",
+						"          ProductID = {nw-ProductID},",
+						"          Name = {nw-Name},",
+						"          ProductNumber = {nw-ProductNumber},",
+						"          Color = {nw-Color},",
+						"          StandardCost = {nw-StandardCost},",
+						"          ListPrice = {nw-ListPrice},",
+						"          Size = {nw-Size},",
+						"          Weight = {nw-Weight},",
+						"          ProductCategory = {nw-ProductCategory},",
+						"          ProductModelID = {nw-ProductModelID},",
+						"          StartDate = {nw-StartDate},",
+						"          EndDate,",
+						"          iscurrent",
+						"     )) ~> sinkUpdate",
+						"sDateActice sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          surrKey as integer,",
+						"          ProductID as integer,",
+						"          Name as string,",
+						"          ProductNumber as string,",
+						"          Color as string,",
+						"          StandardCost as decimal(19,4),",
+						"          ListPrice as decimal(19,4),",
+						"          Size as string,",
+						"          Weight as decimal(18,0),",
+						"          ProductCategory as integer,",
+						"          ProductModelID as integer,",
+						"          StartDate as date,",
+						"          EndDate as date,",
+						"          iscurrent as integer",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          ProductID,",
+						"          Name,",
+						"          ProductNumber,",
+						"          Color,",
+						"          StandardCost,",
+						"          ListPrice,",
+						"          Size,",
+						"          Weight,",
+						"          ProductCategory = ProductCategoryID,",
+						"          ProductModelID,",
+						"          StartDate,",
+						"          iscurrent = isActive",
+						"     )) ~> sinkChanged"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Product1IN')]",
+				"[concat(variables('factoryId'), '/datasets/ProductnwOUT')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflowSCD2sqlTosql')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "ProjectGladiator"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "Product1IN",
+								"type": "DatasetReference"
+							},
+							"name": "Product1"
+						},
+						{
+							"dataset": {
+								"referenceName": "ProductnwOUT",
+								"type": "DatasetReference"
+							},
+							"name": "Productnw"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "ProductnwOUT",
+								"type": "DatasetReference"
+							},
+							"name": "sinkNew"
+						},
+						{
+							"dataset": {
+								"referenceName": "ProductnwOUT",
+								"type": "DatasetReference"
+							},
+							"name": "sinkUpdate"
+						},
+						{
+							"dataset": {
+								"referenceName": "ProductnwOUT",
+								"type": "DatasetReference"
+							},
+							"name": "sinkChanged"
+						}
+					],
+					"transformations": [
+						{
+							"name": "pidcheck"
+						},
+						{
+							"name": "Split"
+						},
+						{
+							"name": "select1"
+						},
+						{
+							"name": "derivedColumn1"
+						},
+						{
+							"name": "select2"
+						},
+						{
+							"name": "costcheck"
+						},
+						{
+							"name": "filterchangedcost"
+						},
+						{
+							"name": "derivedColumn2"
+						},
+						{
+							"name": "changename"
+						},
+						{
+							"name": "AlterRow1"
+						},
+						{
+							"name": "selectnw"
+						},
+						{
+							"name": "selectproduct1"
+						},
+						{
+							"name": "sDateActice"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          ProductID as integer,",
+						"          Name as string,",
+						"          ProductNumber as string,",
+						"          Color as string,",
+						"          StandardCost as decimal(19,4),",
+						"          ListPrice as decimal(19,4),",
+						"          Size as string,",
+						"          Weight as decimal(8,2),",
+						"          ProductCategoryID as integer,",
+						"          ProductModelID as integer",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> Product1",
+						"source(output(",
+						"          surrKey as integer,",
+						"          ProductID as integer,",
+						"          Name as string,",
+						"          ProductNumber as string,",
+						"          Color as string,",
+						"          StandardCost as decimal(19,4),",
+						"          ListPrice as decimal(19,4),",
+						"          Size as string,",
+						"          Weight as decimal(18,0),",
+						"          ProductCategory as integer,",
+						"          ProductModelID as integer,",
+						"          StartDate as date,",
+						"          EndDate as date,",
+						"          iscurrent as integer",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> Productnw",
+						"Product1, changename lookup(ProductID == {nw-ProductID},",
+						"     multiple: false,",
+						"     pickup: 'any',",
+						"     broadcast: 'auto')~> pidcheck",
+						"pidcheck split(!isNull({nw-ProductID}),",
+						"     isNull({nw-ProductID}),",
+						"     disjoint: true) ~> Split@(old, new, All)",
+						"Split@new select(mapColumn(",
+						"          ProductID,",
+						"          Name,",
+						"          ProductNumber,",
+						"          Color,",
+						"          StandardCost,",
+						"          ListPrice,",
+						"          Size,",
+						"          Weight,",
+						"          ProductCategoryID,",
+						"          ProductModelID",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"select1 derive(StartDate = currentDate(),",
+						"          isCurrent = 1) ~> derivedColumn1",
+						"Split@old select(mapColumn(",
+						"          ProductID,",
+						"          Name,",
+						"          ProductNumber,",
+						"          Color,",
+						"          StandardCost,",
+						"          ListPrice,",
+						"          Size,",
+						"          Weight,",
+						"          ProductCategoryID,",
+						"          ProductModelID",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select2",
+						"select2, changename lookup(ProductID == {nw-ProductID}",
+						"     && StandardCost != {nw-StandardCost},",
+						"     multiple: true,",
+						"     broadcast: 'right')~> costcheck",
+						"costcheck filter(!isNull({nw-ProductID})) ~> filterchangedcost",
+						"selectnw derive(iscurrent = 0,",
+						"          EndDate = currentDate()) ~> derivedColumn2",
+						"Productnw select(mapColumn(",
+						"          {nw-surrKey} = surrKey,",
+						"          {nw-ProductID} = ProductID,",
+						"          {nw-Name} = Name,",
+						"          {nw-ProductNumber} = ProductNumber,",
+						"          {nw-Color} = Color,",
+						"          {nw-StandardCost} = StandardCost,",
+						"          {nw-ListPrice} = ListPrice,",
+						"          {nw-Size} = Size,",
+						"          {nw-Weight} = Weight,",
+						"          {nw-ProductCategory} = ProductCategory,",
+						"          {nw-ProductModelID} = ProductModelID,",
+						"          {nw-StartDate} = StartDate,",
+						"          {nw-EndDate} = EndDate,",
+						"          {nw-iscurrent} = iscurrent",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> changename",
+						"derivedColumn2 alterRow(updateIf(1==1)) ~> AlterRow1",
+						"filterchangedcost select(mapColumn(",
+						"          {nw-surrKey},",
+						"          {nw-ProductID},",
+						"          {nw-Name},",
+						"          {nw-ProductNumber},",
+						"          {nw-Color},",
+						"          {nw-StandardCost},",
+						"          {nw-ListPrice},",
+						"          {nw-Size},",
+						"          {nw-Weight},",
+						"          {nw-ProductCategory},",
+						"          {nw-ProductModelID},",
+						"          {nw-StartDate},",
+						"          {nw-EndDate},",
+						"          {nw-iscurrent}",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> selectnw",
+						"filterchangedcost select(mapColumn(",
+						"          ProductID,",
+						"          Name,",
+						"          ProductNumber,",
+						"          Color,",
+						"          StandardCost,",
+						"          ListPrice,",
+						"          Size,",
+						"          Weight,",
+						"          ProductCategoryID,",
+						"          ProductModelID",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> selectproduct1",
+						"selectproduct1 derive(isActive = 1,",
+						"          StartDate = currentDate()) ~> sDateActice",
+						"derivedColumn1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          surrKey as integer,",
+						"          ProductID as integer,",
+						"          Name as string,",
+						"          ProductNumber as string,",
+						"          Color as string,",
+						"          StandardCost as decimal(19,4),",
+						"          ListPrice as decimal(19,4),",
+						"          Size as string,",
+						"          Weight as decimal(18,0),",
+						"          ProductCategory as integer,",
+						"          ProductModelID as integer,",
+						"          StartDate as date,",
+						"          EndDate as date,",
+						"          iscurrent as integer",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          ProductID,",
+						"          Name,",
+						"          ProductNumber,",
+						"          Color,",
+						"          StandardCost,",
+						"          ListPrice,",
+						"          Size,",
+						"          Weight,",
+						"          ProductModelID,",
+						"          StartDate,",
+						"          iscurrent = isCurrent",
+						"     )) ~> sinkNew",
+						"AlterRow1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          surrKey as integer,",
+						"          ProductID as integer,",
+						"          Name as string,",
+						"          ProductNumber as string,",
+						"          Color as string,",
+						"          StandardCost as decimal(19,4),",
+						"          ListPrice as decimal(19,4),",
+						"          Size as string,",
+						"          Weight as decimal(18,0),",
+						"          ProductCategory as integer,",
+						"          ProductModelID as integer,",
+						"          StartDate as date,",
+						"          EndDate as date,",
+						"          iscurrent as integer",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:false,",
+						"     updateable:true,",
+						"     upsertable:false,",
+						"     keys:['surrKey'],",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          surrKey = {nw-surrKey},",
+						"          ProductID = {nw-ProductID},",
+						"          Name = {nw-Name},",
+						"          ProductNumber = {nw-ProductNumber},",
+						"          Color = {nw-Color},",
+						"          StandardCost = {nw-StandardCost},",
+						"          ListPrice = {nw-ListPrice},",
+						"          Size = {nw-Size},",
+						"          Weight = {nw-Weight},",
+						"          ProductCategory = {nw-ProductCategory},",
+						"          ProductModelID = {nw-ProductModelID},",
+						"          StartDate = {nw-StartDate},",
+						"          EndDate,",
+						"          iscurrent",
+						"     )) ~> sinkUpdate",
+						"sDateActice sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          surrKey as integer,",
+						"          ProductID as integer,",
+						"          Name as string,",
+						"          ProductNumber as string,",
+						"          Color as string,",
+						"          StandardCost as decimal(19,4),",
+						"          ListPrice as decimal(19,4),",
+						"          Size as string,",
+						"          Weight as decimal(18,0),",
+						"          ProductCategory as integer,",
+						"          ProductModelID as integer,",
+						"          StartDate as date,",
+						"          EndDate as date,",
+						"          iscurrent as integer",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          ProductID,",
+						"          Name,",
+						"          ProductNumber,",
+						"          Color,",
+						"          StandardCost,",
+						"          ListPrice,",
+						"          Size,",
+						"          Weight,",
+						"          ProductCategory = ProductCategoryID,",
+						"          ProductModelID,",
+						"          StartDate,",
+						"          iscurrent = isActive",
+						"     )) ~> sinkChanged"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Product1IN')]",
+				"[concat(variables('factoryId'), '/datasets/ProductnwOUT')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/NewSCD2')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "SCD2NEW",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"Product1": {},
+									"Productnw": {},
+									"sinkUpdate": {},
+									"sinkChanged": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Data flow1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "JsonSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "JsonWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "ProductnwOUT",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Productnwjson",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "ProjectGladiator"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-09-25T14:49:02Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/SCD2NEW')]",
+				"[concat(variables('factoryId'), '/datasets/ProductnwOUT')]",
+				"[concat(variables('factoryId'), '/datasets/Productnwjson')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/pipelineSCD2')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "dataflowSCD2sqlTosql",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"Product1": {},
+									"Productnw": {},
+									"sinkNew": {},
+									"sinkUpdate": {},
+									"sinkChanged": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"folder": {
+					"name": "ProjectGladiator"
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-09-25T14:04:27Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/dataflowSCD2sqlTosql')]"
+			]
+		}
+	]
+}
