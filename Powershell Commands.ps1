@@ -4,7 +4,7 @@ $resourceGroupName = "Batch07"
 $location = "westus"
 # Set an admin login and password for your server
 $adminSqlLogin = "SqlAdmin"
-$password = "JaiHindDoston#5241"
+$password = *****************
 # Set server name - the logical server name has to be unique in the system
 $serverName = "ltiserverbatchsevenserver"
 # The sample database name
