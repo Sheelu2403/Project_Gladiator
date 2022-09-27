@@ -1,0 +1,9 @@
+{
+	"name": "Batch07ADfPractice",
+	"location": "East US",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "8b9db96e-8617-4bf5-9ab5-ebfe54c55de5",
+		"tenantId": "02aa9fc1-18bc-4798-a020-e01c854dd434"
+	}
+}
