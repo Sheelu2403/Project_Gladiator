@@ -63,7 +63,7 @@
 		],
 		"typeProperties": {
 			"schema": "SalesLT",
-			"table": "Product1"
+			"table": "Product"
 		}
 	},
 	"type": "Microsoft.DataFactory/factories/datasets"
