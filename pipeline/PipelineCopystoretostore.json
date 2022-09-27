@@ -1,0 +1,190 @@
+{
+	"name": "PipelineCopystoretostore",
+	"properties": {
+		"activities": [
+			{
+				"name": "Activitycopystoretostore",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": false,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "JsonSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "JsonWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"dataIntegrationUnits": 2,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "Id",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['Id']"
+								}
+							},
+							{
+								"source": {
+									"name": "Loan_ID",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['Loan_ID']"
+								}
+							},
+							{
+								"source": {
+									"name": "Gender",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['Gender']"
+								}
+							},
+							{
+								"source": {
+									"name": "Marital",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['Marital']"
+								}
+							},
+							{
+								"source": {
+									"name": "Dependents",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['Dependents']"
+								}
+							},
+							{
+								"source": {
+									"name": "Education",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['Education']"
+								}
+							},
+							{
+								"source": {
+									"name": "SelfEmplo",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['SelfEmplo']"
+								}
+							},
+							{
+								"source": {
+									"name": "ApplIncome",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['ApplIncome']"
+								}
+							},
+							{
+								"source": {
+									"name": "CoApplIncome",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['CoApplIncome']"
+								}
+							},
+							{
+								"source": {
+									"name": "Loan Amt",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['Loan Amt']"
+								}
+							},
+							{
+								"source": {
+									"name": "Term",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['Term']"
+								}
+							},
+							{
+								"source": {
+									"name": "CreditHistory",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['CreditHistory']"
+								}
+							},
+							{
+								"source": {
+									"name": "PropArea",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['PropArea']"
+								}
+							},
+							{
+								"source": {
+									"name": "LoanStatus",
+									"type": "String"
+								},
+								"sink": {
+									"path": "$['LoanStatus']"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "DatasetINCsvTOJson",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DatasetOUTJson",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2022-09-15T17:22:37Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

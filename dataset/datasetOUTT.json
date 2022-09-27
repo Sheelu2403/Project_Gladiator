@@ -1,0 +1,24 @@
+{
+	"name": "datasetOUTT",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "linkaftabstorageaccountnew",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DataBasicFlow"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "loanfemale.json",
+				"folderPath": "loan/female",
+				"container": "data"
+			}
+		},
+		"schema": {}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

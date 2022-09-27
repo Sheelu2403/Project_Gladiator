@@ -1,0 +1,28 @@
+{
+	"name": "datasetltioutaftabltiaftabstore",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "linkltiaftabstore",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "customerdbtostore"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "customer.csv",
+				"folderPath": "customer",
+				"container": "data"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,24 @@
+{
+	"name": "DatasetOUTJson",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "linkltiaftabstorageaccount",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "ConvertCsvToJson"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "loan.json",
+				"folderPath": "output",
+				"container": "data"
+			}
+		},
+		"schema": {}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

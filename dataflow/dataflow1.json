@@ -1,0 +1,103 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "dataflowIN",
+						"type": "DatasetReference"
+					},
+					"name": "TransformSourceLoanData"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DatasetINN",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "datasetOUTT",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
+				}
+			],
+			"transformations": [
+				{
+					"name": "TransformTotalINcome"
+				},
+				{
+					"name": "TransformSelect"
+				},
+				{
+					"name": "TransformFilterforDependence"
+				},
+				{
+					"name": "StreamForMale"
+				},
+				{
+					"name": "sort1"
+				},
+				{
+					"name": "sort2"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          Id as short,",
+				"          Loan_ID as string,",
+				"          Gender as boolean,",
+				"          Marital as boolean,",
+				"          Dependents as short,",
+				"          Education as boolean,",
+				"          SelfEmplo as boolean,",
+				"          ApplIncome as integer,",
+				"          CoApplIncome as double,",
+				"          {Loan Amt} as short,",
+				"          Term as double,",
+				"          CreditHistory as boolean,",
+				"          PropArea as short,",
+				"          LoanStatus as boolean",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> TransformSourceLoanData",
+				"TransformSourceLoanData derive(TotalIncome = ApplIncome+CoApplIncome) ~> TransformTotalINcome",
+				"TransformTotalINcome select(mapColumn(",
+				"          Id,",
+				"          Loan_ID,",
+				"          Gender,",
+				"          Dependents,",
+				"          {Loan Amt},",
+				"          TotalIncome",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> TransformSelect",
+				"TransformSelect filter(Dependents<2) ~> TransformFilterforDependence",
+				"TransformFilterforDependence split(Gender==true(),",
+				"     Gender==false(),",
+				"     disjoint: true) ~> StreamForMale@(StreamForMale, StreamForFemale, Default)",
+				"StreamForMale@StreamForMale sort(desc(TotalIncome, true)) ~> sort1",
+				"StreamForMale@StreamForFemale sort(desc(TotalIncome, true)) ~> sort2",
+				"sort1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['male'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink1",
+				"sort2 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['female'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink2"
+			]
+		}
+	}
+}

@@ -1,0 +1,24 @@
+{
+	"name": "DatasetINN",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "linkaftabstorageaccountnew",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DataBasicFlow"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "loanmale.json",
+				"folderPath": "loan/male",
+				"container": "data"
+			}
+		},
+		"schema": {}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

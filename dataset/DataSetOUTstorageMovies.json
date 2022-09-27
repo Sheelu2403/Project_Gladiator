@@ -1,0 +1,28 @@
+{
+	"name": "DataSetOUTstorageMovies",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "linkaftabstorageaccountnew",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "DataFlowBasics"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "MovieDBAggre.csv",
+				"folderPath": "movies",
+				"container": "data"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

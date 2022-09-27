@@ -1,0 +1,121 @@
+{
+	"name": "pipelineParamAndVar",
+	"properties": {
+		"activities": [
+			{
+				"name": "IntialiseMessage",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Message",
+					"value": "Is it raining today?"
+				}
+			},
+			{
+				"name": "If Condition1",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "IntialiseMessage",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@pipeline().parameters.UserInput",
+						"type": "Expression"
+					},
+					"ifFalseActivities": [
+						{
+							"name": "Set variable2",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "Message",
+								"value": "no colors to add"
+							}
+						}
+					],
+					"ifTrueActivities": [
+						{
+							"name": "Append variable1",
+							"type": "AppendVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "Colors",
+								"value": "Red"
+							}
+						},
+						{
+							"name": "Append variable2",
+							"type": "AppendVariable",
+							"dependsOn": [
+								{
+									"activity": "Append variable1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "Colors",
+								"value": "Yellow"
+							}
+						},
+						{
+							"name": "Set variable1",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Append variable2",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "Message",
+								"value": {
+									"value": "@join(variables('Colors'),',')",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"UserInput": {
+				"type": "bool",
+				"defaultValue": false
+			}
+		},
+		"variables": {
+			"Colors": {
+				"type": "Array",
+				"defaultValue": [
+					"White",
+					"Black"
+				]
+			},
+			"Message": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "ControlFlow"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-09-16T05:20:07Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

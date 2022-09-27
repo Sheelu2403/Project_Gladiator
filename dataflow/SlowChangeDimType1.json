@@ -1,0 +1,62 @@
+{
+	"name": "SlowChangeDimType1",
+	"properties": {
+		"folder": {
+			"name": "SlowlyChangingDimType1"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DatasetINSqlStgCustomer",
+						"type": "DatasetReference"
+					},
+					"name": "SourceStgCustomer"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DatasetOUTSqlDimCustomer",
+						"type": "DatasetReference"
+					},
+					"name": "SinkDimCustomer"
+				}
+			],
+			"transformations": [
+				{
+					"name": "UpsertRecords"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          Cust_Number as integer,",
+				"          Customer_Name as string,",
+				"          Customer_Company as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> SourceStgCustomer",
+				"SourceStgCustomer alterRow(upsertIf(true())) ~> UpsertRecords",
+				"UpsertRecords sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          Cust_Number as integer,",
+				"          Customer_Name as string,",
+				"          Customer_Company as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:false,",
+				"     updateable:false,",
+				"     upsertable:true,",
+				"     keys:['Cust_Number'],",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> SinkDimCustomer"
+			]
+		}
+	}
+}

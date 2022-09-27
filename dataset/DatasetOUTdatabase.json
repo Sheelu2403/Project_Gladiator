@@ -1,0 +1,16 @@
+{
+	"name": "DatasetOUTdatabase",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "linkaftabdatabase",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "CopyDbToDb"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

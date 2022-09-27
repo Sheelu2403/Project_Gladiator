@@ -1,0 +1,37 @@
+{
+	"name": "PipeSCD_Type1",
+	"properties": {
+		"activities": [
+			{
+				"name": "InvokeDataflowScdType1",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "SlowChangeDimType1",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"folder": {
+			"name": "SlowlyChangeDimType1"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-09-20T04:40:34Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

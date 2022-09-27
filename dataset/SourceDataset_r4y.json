@@ -1,0 +1,20 @@
+{
+	"name": "SourceDataset_r4y",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "linkltiaftabstore",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "LoanData_Raw (2).csv",
+				"folderPath": "loan",
+				"container": "data"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,28 @@
+{
+	"name": "DatasetOUTBLOB",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "linkaftabstorageaccountnew",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "NewDBToStore"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "querydata.csv",
+				"folderPath": "loan",
+				"container": "data"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": false,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

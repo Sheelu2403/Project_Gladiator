@@ -1,0 +1,25 @@
+{
+	"name": "DatasetOUTParquet",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "linkltiaftabstorageaccount",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "ConvertCSVToParquet"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "loan.parquet",
+				"folderPath": "outputs",
+				"container": "data"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

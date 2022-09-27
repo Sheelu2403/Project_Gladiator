@@ -1,0 +1,68 @@
+{
+	"name": "datasetINfilelocation",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "linkaftabstorageaccountnew",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "merge"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": "location",
+				"container": "data"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"Arrival_Time": {
+					"type": "integer"
+				},
+				"Creation_Time": {
+					"type": "integer"
+				},
+				"Device": {
+					"type": "string"
+				},
+				"Index": {
+					"type": "integer"
+				},
+				"Model": {
+					"type": "string"
+				},
+				"User": {
+					"type": "string"
+				},
+				"geolocation": {
+					"type": "object",
+					"properties": {
+						"city": {
+							"type": "string"
+						},
+						"country": {
+							"type": "string"
+						}
+					}
+				},
+				"gt": {
+					"type": "string"
+				},
+				"x": {
+					"type": "number"
+				},
+				"y": {
+					"type": "number"
+				},
+				"z": {
+					"type": "number"
+				}
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,24 @@
+{
+	"name": "datasetoutloandata_rawjson",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "linkltiaftabstore",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "loanstoretostore"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "loandatajson",
+				"folderPath": "outputs",
+				"container": "data"
+			}
+		},
+		"schema": {}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

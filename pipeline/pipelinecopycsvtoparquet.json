@@ -1,0 +1,200 @@
+{
+	"name": "pipelinecopycsvtoparquet",
+	"properties": {
+		"activities": [
+			{
+				"name": "csvtoparquetconversion",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": false,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"dataIntegrationUnits": 2,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "Loan_ID",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Loan_ID",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "Gender",
+									"type": "Int32",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Gender",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "Marital",
+									"type": "Int32",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Marital",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "Dependents",
+									"type": "Int32",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Dependents",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "Education",
+									"type": "Int32",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "Education",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "SelfEmplo",
+									"type": "Int32",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "SelfEmplo",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "ApplIncome",
+									"type": "Double",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "ApplIncome",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "CoApplIncome",
+									"type": "Double",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "CoApplIncome",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "Loan Amt",
+									"type": "Double",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "LoanAmt",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "PropArea",
+									"type": "Int32",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "PropArea",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							},
+							{
+								"source": {
+									"name": "LoanStatus",
+									"type": "Int32",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "LoanStatus",
+									"type": "String",
+									"physicalType": "UTF8"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "csvformatforconversion",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "parquetoutput",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2022-09-15T07:54:35Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

@@ -1,0 +1,20 @@
+{
+	"name": "datasetproductINsqlDb",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "linkltiaftabdb",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "productdbtoSTOREtoADL"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "SalesLT",
+			"table": "Address"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

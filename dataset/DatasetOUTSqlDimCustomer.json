@@ -1,0 +1,34 @@
+{
+	"name": "DatasetOUTSqlDimCustomer",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LinkDbScdType1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Slowly"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "Cust_Number",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Customer_Name",
+				"type": "varchar"
+			},
+			{
+				"name": "Customer_Company",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "DIM_Customer"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

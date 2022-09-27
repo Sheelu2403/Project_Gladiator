@@ -1,0 +1,47 @@
+{
+	"name": "pipelinefilter",
+	"properties": {
+		"activities": [
+			{
+				"name": "Filter1",
+				"type": "Filter",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@variable('aftabarray')",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@pipeline().parameters.userinput",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"userinput": {
+				"type": "bool"
+			}
+		},
+		"variables": {
+			"aftabarray": {
+				"type": "Array",
+				"defaultValue": [
+					"aftab",
+					"array"
+				]
+			},
+			"message": {
+				"type": "String",
+				"defaultValue": "\"cat\""
+			}
+		},
+		"folder": {
+			"name": "ControlFlow"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-09-16T06:42:59Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

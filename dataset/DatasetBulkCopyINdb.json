@@ -1,0 +1,16 @@
+{
+	"name": "DatasetBulkCopyINdb",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "linkltiaftabdb",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "BulkCopyDbtoStore"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

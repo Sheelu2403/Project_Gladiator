@@ -1,0 +1,20 @@
+{
+	"name": "DatasetSCD2OUTEmployeetable",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "linkSCD2db",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "SCD2New"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "tbl_employee"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

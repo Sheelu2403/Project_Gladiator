@@ -1,0 +1,16 @@
+{
+	"name": "DatasetCopyINDB",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "linkaftabdatabase",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "TableDataFromDBTOSTORE"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

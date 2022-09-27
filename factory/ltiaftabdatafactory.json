@@ -1,0 +1,9 @@
+{
+	"name": "ltiaftabdatafactory",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "88fbab59-2494-4232-81db-2b62000186c0",
+		"tenantId": "02aa9fc1-18bc-4798-a020-e01c854dd434"
+	}
+}

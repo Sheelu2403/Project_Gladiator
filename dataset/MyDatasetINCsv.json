@@ -1,0 +1,85 @@
+{
+	"name": "MyDatasetINCsv",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "linkaftabstorageaccountnew",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "MyCopyCsvToJson"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "LoanData_Raw (2).csv",
+				"folderPath": "loan",
+				"container": "data"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "Id",
+				"type": "String"
+			},
+			{
+				"name": "Loan_ID",
+				"type": "String"
+			},
+			{
+				"name": "Gender",
+				"type": "String"
+			},
+			{
+				"name": "Marital",
+				"type": "String"
+			},
+			{
+				"name": "Dependents",
+				"type": "String"
+			},
+			{
+				"name": "Education",
+				"type": "String"
+			},
+			{
+				"name": "SelfEmplo",
+				"type": "String"
+			},
+			{
+				"name": "ApplIncome",
+				"type": "String"
+			},
+			{
+				"name": "CoApplIncome",
+				"type": "String"
+			},
+			{
+				"name": "Loan Amt",
+				"type": "String"
+			},
+			{
+				"name": "Term",
+				"type": "String"
+			},
+			{
+				"name": "CreditHistory",
+				"type": "String"
+			},
+			{
+				"name": "PropArea",
+				"type": "String"
+			},
+			{
+				"name": "LoanStatus",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

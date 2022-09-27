@@ -1,0 +1,48 @@
+{
+	"name": "DatasetOUTProductNW",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "linkbatch07sqldb",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Batch07"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "SalesRepID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "RepSourceId",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "First_Name",
+				"type": "varchar"
+			},
+			{
+				"name": "Last_Name",
+				"type": "varchar"
+			},
+			{
+				"name": "Region",
+				"type": "varchar"
+			},
+			{
+				"name": "IsActive",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "SalesLT",
+			"table": "ProductNW"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
