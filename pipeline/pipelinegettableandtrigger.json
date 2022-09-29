@@ -1,0 +1,68 @@
+{
+	"name": "pipelinegettableandtrigger",
+	"properties": {
+		"activities": [
+			{
+				"name": "Gettablelist",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "SELECT TABLE_SCHEMA, TABLE_NAME\n\nFROM information_schema.TABLES\n\nWHERE TABLE_TYPE = 'BASE TABLE' and TABLE_SCHEMA = 'SalesLT' and TABLE_NAME = 'Customer'",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "datasetindb",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Executebluckcopy",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Gettablelist",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Traversepipeline",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"Tablelist": {
+							"value": "@activity('Gettablelist').output.value",
+							"type": "Expression"
+						}
+					}
+				}
+			}
+		],
+		"folder": {
+			"name": "invokepipeline"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-09-17T10:21:22Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

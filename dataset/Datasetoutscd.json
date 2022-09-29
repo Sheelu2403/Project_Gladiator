@@ -1,0 +1,48 @@
+{
+	"name": "Datasetoutscd",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "scdtype2"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "surrKey",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "empid",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "empname",
+				"type": "nvarchar"
+			},
+			{
+				"name": "gender",
+				"type": "nvarchar"
+			},
+			{
+				"name": "country",
+				"type": "nvarchar"
+			},
+			{
+				"name": "isActive",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "tbl_employee"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

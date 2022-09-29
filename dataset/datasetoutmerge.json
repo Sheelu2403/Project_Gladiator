@@ -1,0 +1,31 @@
+{
+	"name": "datasetoutmerge",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Linkblobstore",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "mergefiles"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@concat('Merged', pipeline().RunId, '.csv')",
+					"type": "Expression"
+				},
+				"folderPath": "outputs",
+				"container": "data"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

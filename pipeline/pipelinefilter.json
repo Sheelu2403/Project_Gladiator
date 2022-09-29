@@ -3,45 +3,60 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Filter1",
+				"name": "Filteractivity",
 				"type": "Filter",
 				"dependsOn": [],
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@variable('aftabarray')",
+						"value": "@variables('vals')",
 						"type": "Expression"
 					},
 					"condition": {
-						"value": "@pipeline().parameters.userinput",
+						"value": "@not(contains(item(), 'pu'))",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "set",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Filteractivity",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "vals",
+					"value": {
+						"value": "@activity('Filteractivity').output.value",
 						"type": "Expression"
 					}
 				}
 			}
 		],
-		"parameters": {
-			"userinput": {
-				"type": "bool"
-			}
-		},
 		"variables": {
-			"aftabarray": {
+			"vals": {
 				"type": "Array",
 				"defaultValue": [
-					"aftab",
-					"array"
+					"ganavi",
+					"punu",
+					"prathi"
 				]
 			},
-			"message": {
-				"type": "String",
-				"defaultValue": "\"cat\""
+			"msg": {
+				"type": "String"
 			}
 		},
 		"folder": {
-			"name": "ControlFlow"
+			"name": "controlflows"
 		},
 		"annotations": [],
-		"lastPublishTime": "2022-09-16T06:42:59Z"
+		"lastPublishTime": "2022-09-16T06:50:23Z"
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }

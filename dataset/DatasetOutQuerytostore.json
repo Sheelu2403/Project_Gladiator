@@ -1,0 +1,28 @@
+{
+	"name": "DatasetOutQuerytostore",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Linkblobstore",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "copyQuerydataToStore"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "querydata.csv",
+				"folderPath": "location",
+				"container": "data"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

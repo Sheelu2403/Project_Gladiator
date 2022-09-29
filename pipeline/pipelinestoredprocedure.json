@@ -1,0 +1,36 @@
+{
+	"name": "pipelinestoredprocedure",
+	"properties": {
+		"activities": [
+			{
+				"name": "logstatus",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[logstates]",
+					"storedProcedureParameters": {
+						"statusmsg": {
+							"value": "inserted",
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2022-09-17T08:26:41Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

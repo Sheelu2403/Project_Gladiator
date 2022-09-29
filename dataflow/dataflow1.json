@@ -1,28 +1,38 @@
 {
 	"name": "dataflow1",
 	"properties": {
+		"folder": {
+			"name": "SCDtype2"
+		},
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "dataflowIN",
+						"referenceName": "DatasetInscd2",
 						"type": "DatasetReference"
 					},
-					"name": "TransformSourceLoanData"
+					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "Datasetoutscd",
+						"type": "DatasetReference"
+					},
+					"name": "empdb"
 				}
 			],
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "DatasetINN",
+						"referenceName": "Datasetoutscd",
 						"type": "DatasetReference"
 					},
 					"name": "sink1"
 				},
 				{
 					"dataset": {
-						"referenceName": "datasetOUTT",
+						"referenceName": "Datasetoutscd",
 						"type": "DatasetReference"
 					},
 					"name": "sink2"
@@ -30,73 +40,130 @@
 			],
 			"transformations": [
 				{
-					"name": "TransformTotalINcome"
+					"name": "derivedColumn1"
 				},
 				{
-					"name": "TransformSelect"
+					"name": "select1"
 				},
 				{
-					"name": "TransformFilterforDependence"
+					"name": "lookup1"
 				},
 				{
-					"name": "StreamForMale"
+					"name": "existingrows"
 				},
 				{
-					"name": "sort1"
+					"name": "select2"
 				},
 				{
-					"name": "sort2"
+					"name": "derivedColumn2"
+				},
+				{
+					"name": "alterRow1"
 				}
 			],
 			"scriptLines": [
 				"source(output(",
-				"          Id as short,",
-				"          Loan_ID as string,",
-				"          Gender as boolean,",
-				"          Marital as boolean,",
-				"          Dependents as short,",
-				"          Education as boolean,",
-				"          SelfEmplo as boolean,",
-				"          ApplIncome as integer,",
-				"          CoApplIncome as double,",
-				"          {Loan Amt} as short,",
-				"          Term as double,",
-				"          CreditHistory as boolean,",
-				"          PropArea as short,",
-				"          LoanStatus as boolean",
+				"          empid as integer,",
+				"          empname as string,",
+				"          gender as string,",
+				"          country as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> TransformSourceLoanData",
-				"TransformSourceLoanData derive(TotalIncome = ApplIncome+CoApplIncome) ~> TransformTotalINcome",
-				"TransformTotalINcome select(mapColumn(",
-				"          Id,",
-				"          Loan_ID,",
-				"          Gender,",
-				"          Dependents,",
-				"          {Loan Amt},",
-				"          TotalIncome",
+				"     ignoreNoFilesFound: false) ~> source1",
+				"source(output(",
+				"          surrKey as integer,",
+				"          empid as integer,",
+				"          empname as string,",
+				"          gender as string,",
+				"          country as string,",
+				"          isActive as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> empdb",
+				"source1 derive(isActive = 1) ~> derivedColumn1",
+				"empdb select(mapColumn(",
+				"          SQL_surrKey = surrKey,",
+				"          SQL_empid = empid,",
+				"          SQL_empname = empname,",
+				"          SQL_gender = gender,",
+				"          SQL_country = country,",
+				"          SQL_isActive = isActive",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> TransformSelect",
-				"TransformSelect filter(Dependents<2) ~> TransformFilterforDependence",
-				"TransformFilterforDependence split(Gender==true(),",
-				"     Gender==false(),",
-				"     disjoint: true) ~> StreamForMale@(StreamForMale, StreamForFemale, Default)",
-				"StreamForMale@StreamForMale sort(desc(TotalIncome, true)) ~> sort1",
-				"StreamForMale@StreamForFemale sort(desc(TotalIncome, true)) ~> sort2",
-				"sort1 sink(allowSchemaDrift: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"source1, select1 lookup(empid == SQL_empid,",
+				"     multiple: true,",
+				"     broadcast: 'auto')~> lookup1",
+				"lookup1 filter(!isNull(SQL_empid)) ~> existingrows",
+				"existingrows select(mapColumn(",
+				"          SQL_surrKey,",
+				"          SQL_empid,",
+				"          SQL_empname,",
+				"          SQL_gender,",
+				"          SQL_country,",
+				"          SQL_isActive",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"select2 derive(SQL_isActive = 0) ~> derivedColumn2",
+				"derivedColumn2 alterRow(updateIf(1==1)) ~> alterRow1",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     partitionFileNames:['male'],",
+				"     input(",
+				"          surrKey as integer,",
+				"          empid as integer,",
+				"          empname as string,",
+				"          gender as string,",
+				"          country as string,",
+				"          isActive as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     partitionBy('hash', 1)) ~> sink1",
-				"sort2 sink(allowSchemaDrift: true,",
+				"     saveOrder: 2,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          empid,",
+				"          empname,",
+				"          gender,",
+				"          country,",
+				"          isActive",
+				"     )) ~> sink1",
+				"alterRow1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     partitionFileNames:['female'],",
+				"     input(",
+				"          surrKey as integer,",
+				"          empid as integer,",
+				"          empname as string,",
+				"          gender as string,",
+				"          country as string,",
+				"          isActive as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:false,",
+				"     updateable:true,",
+				"     upsertable:false,",
+				"     keys:['surrKey'],",
+				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     partitionBy('hash', 1)) ~> sink2"
+				"     saveOrder: 1,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          surrKey = SQL_surrKey,",
+				"          empid = SQL_empid,",
+				"          empname = SQL_empname,",
+				"          gender = SQL_gender,",
+				"          country = SQL_country,",
+				"          isActive = SQL_isActive",
+				"     )) ~> sink2"
 			]
 		}
 	}

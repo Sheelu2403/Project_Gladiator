@@ -1,0 +1,39 @@
+{
+	"name": "datasetout",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Linkblobstore",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"TblSchema": {
+				"type": "string"
+			},
+			"TblName": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "blukcopydbtostore"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@concat(dataset().TblSchema,'-',dataset().TblName,'.csv')",
+					"type": "Expression"
+				},
+				"folderPath": "outputs",
+				"container": "data"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

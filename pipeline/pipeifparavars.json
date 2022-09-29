@@ -1,0 +1,121 @@
+{
+	"name": "pipeifparavars",
+	"properties": {
+		"activities": [
+			{
+				"name": "initializrmsg",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "message",
+					"value": "is it raining today?"
+				}
+			},
+			{
+				"name": "Excercisecondition",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "initializrmsg",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@pipeline().parameters.userinput",
+						"type": "Expression"
+					},
+					"ifFalseActivities": [
+						{
+							"name": "Setmyfalsemsg",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "message",
+								"value": "not raining"
+							}
+						}
+					],
+					"ifTrueActivities": [
+						{
+							"name": "AppendColorred",
+							"type": "AppendVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "colors",
+								"value": "Red"
+							}
+						},
+						{
+							"name": "Appendcoloryellow",
+							"type": "AppendVariable",
+							"dependsOn": [
+								{
+									"activity": "AppendColorred",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "colors",
+								"value": "Yellow"
+							}
+						},
+						{
+							"name": "Setstringmsg",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Appendcoloryellow",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "message",
+								"value": {
+									"value": "@join(variables('colors'),',')",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"userinput": {
+				"type": "bool",
+				"defaultValue": false
+			}
+		},
+		"variables": {
+			"colors": {
+				"type": "Array",
+				"defaultValue": [
+					"white",
+					"black"
+				]
+			},
+			"message": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "controlflows"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-09-16T04:52:19Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

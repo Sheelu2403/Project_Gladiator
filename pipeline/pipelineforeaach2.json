@@ -1,0 +1,71 @@
+{
+	"name": "pipelineforeaach2",
+	"properties": {
+		"activities": [
+			{
+				"name": "iteratetablelist",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.tablelist",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "Appendtableitems",
+							"type": "AppendVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "tableitem",
+								"value": {
+									"value": "@item().TABLE_NAME",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "setresult",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "iteratetablelist",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "Tablelistmsg",
+					"value": {
+						"value": "@join(variables('tableitem'),',')",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"tablelist": {
+				"type": "array"
+			}
+		},
+		"variables": {
+			"Tablelistmsg": {
+				"type": "String"
+			},
+			"tableitem": {
+				"type": "Array"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-09-16T08:55:48Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

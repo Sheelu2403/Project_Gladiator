@@ -1,0 +1,26 @@
+{
+	"name": "datasetinstore",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Linkblobstore",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "bulkcopystoretostore"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": "loan",
+				"container": "data"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,9 @@
+{
+	"name": "ganavidatafactory",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "a5703f12-1a7d-4c96-b229-b5a293c46971",
+		"tenantId": "02aa9fc1-18bc-4798-a020-e01c854dd434"
+	}
+}

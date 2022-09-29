@@ -1,0 +1,23 @@
+{
+	"name": "datasetinlocation",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Linkblobstore",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "mergefiles"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": "location",
+				"container": "data"
+			}
+		},
+		"schema": {}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,124 @@
+{
+	"name": "pipelineweeks",
+	"properties": {
+		"activities": [
+			{
+				"name": "inialmsg",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "msg",
+					"value": "weeks appended"
+				}
+			},
+			{
+				"name": "conditionexercise1",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "inialmsg",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@pipeline().parameters.userin",
+						"type": "Expression"
+					},
+					"ifFalseActivities": [
+						{
+							"name": "Setfalsemessage",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "msg",
+								"value": "week not appened"
+							}
+						}
+					],
+					"ifTrueActivities": [
+						{
+							"name": "Appendsat",
+							"type": "AppendVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "weeks",
+								"value": "Sat"
+							}
+						},
+						{
+							"name": "Appendsun",
+							"type": "AppendVariable",
+							"dependsOn": [
+								{
+									"activity": "Appendsat",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "weeks",
+								"value": "Sun"
+							}
+						},
+						{
+							"name": "Settruemsg",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Appendsun",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "msg",
+								"value": {
+									"value": "@join(variables('weeks'),',')",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"userin": {
+				"type": "bool",
+				"defaultValue": false
+			}
+		},
+		"variables": {
+			"weeks": {
+				"type": "Array",
+				"defaultValue": [
+					"mon",
+					"tues",
+					"wed",
+					"thurs",
+					"fri"
+				]
+			},
+			"msg": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "controlflows"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-09-16T05:15:24Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
